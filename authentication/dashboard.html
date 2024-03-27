@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<body lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>zuku joke</h1>
+    <p id="joke"></p>
+    <button>Logout</button>
+<script>
+        let h1=document.querySelector("h1");
+        let joke_box=document.querySelector("#joke");
+        let token=localStorage.getItem("token");
+        let logoutBtn=document.querySelector("button")
+
+        async function joke(){
+            try{
+                let response = await fetch("https://instagram-express-app.vercel.app/api/auth/zuku",{
+                  method:"GET",
+                  headers:{
+                    "content-type":"application/json",
+                    "authorization":`Bearer ${token}`
+                  }  
+                
+            })
+
+            let res=await response.json();
+            joke_box.innerHTML=res.data.message;
+        }
+            catch(err){
+                console.log(err)
+            }
+        }
+        joke()
+
+        //logout
+
+        logoutBtn.addEventListener("click",logout)
+
+        async function logout(){
+            try{
+            let response =await fetch("https://instagram-express-app.vercel.app/api/auth/logout",{
+            method:"delete",
+            headers:{
+                "content-type": "application/json",
+                "authorization":`Bearer ${token}`
+                
+            }
+        })
+        let res=await response.json();
+        if(res.success==true){
+            localStorage.removeItem("token");
+
+            alert("Logout ")
+
+            // now we just have to move to login page once logout
+
+        }
+    }
+    catch(err){
+        console.log(err);
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+    </script>
+    </body>
+
+</html>

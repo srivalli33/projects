@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>login</title>
+    <style>
+        input,button{
+            display:block;
+            margin:10px;
+            padding:10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Login</h1>
+    <p id="message"></p>
+   
+    <form>
+        <fieldset>
+            <legend>Login</legend>
+        <input type="text" name="email" placeholder="Email" id="email">
+        <input type="password" name="password" placeholder="password " id="password">
+        <button type="submit">Login</button>
+    </fieldset>
+</form>
+
+
+
+
+
+<script>
+    let form=document.querySelector('form');
+    let email_box=document.querySelector("#email");
+    let password_box=document.querySelector("#password")
+    let message = document.querySelector("#message")
+    
+
+      form.addEventListener("submit",login)
+
+       async function login(eventDetails){
+
+        eventDetails.preventDefault()
+        let email=email_box.value;
+        let password=password_box.value;
+     
+        //validations:
+
+        if(email==""||password==""){
+            alert("Please fill all the details");
+            return;
+        }
+
+        //try and catch
+
+        //Try statement allows you to define a block of code to be tested for errors while it is being exexuted.
+
+        // catch statement allows you to define a block of code to be executed ,if an error occurs in the try block.
+
+        try{
+            let response = await fetch("https://instagram-express-app.vercel.app/api/auth/login",{
+
+            method:"POST",
+            headers:{
+                "content-type": "application/json"
+
+                //it indicates it sends json data to the api.
+            },
+
+            body:JSON.stringify({
+                email:email,
+                password:password
+            })
+        })
+        console.log(response) // this response will be redable stream
+         let res = await response.json() // convets this response to json object
+         console.log(res) // 
+
+
+         // add the token to the local storage
+
+         if(res.data.token!=undefined){
+            localStorage.setItem("token",res.data.token);
+         }
+
+    //      res = {
+    // "success": true,
+    // "message": "User saved successfully",
+    // "data": {
+    //     "name": "Swati",
+    //     "email": "swati.6031@gmail.com",
+    //     "password": "$2b$10$dRbv7C3TsbEe/NB1HVdpy.AKDGQGt6f2SDls5c81ZBglo0HyBin7.",
+    //     "_id": "66026288fd78819ef91894ac",
+    //     "createdAt": "2024-03-26T05:52:08.558Z",
+    //     "updatedAt": "2024-03-26T05:52:08.566Z",
+    //     "__v": 0,
+    //     "token": "c1f7d338-9cd8-45a3-9ed1-9a7e05c68203"
+    // }
+// }
+        
+       // display the success or failure message in that paragraph: 
+       message.innerHTML = res.message
+
+       }
+        catch(err){
+            console.log(err);
+
+        }
+        
+    
+
+        //fetch 
+
+
+
+
+    }
+
+</script>
+
+
+</body>
+</html>

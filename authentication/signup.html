@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign-up</title>
+    <style>
+        input,button{
+            display:block;
+            margin:10px;
+            padding:10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Signup</h1>
+    <p id="message"></p>
+    <fieldset>
+    <legend>Sign-up</legend>
+    <form>
+        <input type="text" name="name" placeholder="Name" id="name">
+        <input type="text" name="email" placeholder="Email" id="email">
+        <input type="password" name="password" placeholder="password " id="password">
+        <input type="password" name="password" placeholder="Confirm Password" id="confirm-password">
+
+        <button type="submit">Signup</button>
+</form>
+
+</fieldset>
+
+<!-- // signup api-https://instagram-express-app.vercel.app/api/auth/signup -->
+
+<script>
+    let form=document.querySelector('form');
+    let name_box=document.querySelector("#name");
+    let email_box=document.querySelector("#email");
+    let Password_box=document.querySelector("#password")
+    let confirmPassword_box=document.querySelector("#confirm-password");
+    let message = document.querySelector("#message")
+    
+
+      form.addEventListener("submit",signup)
+
+       async function signup(eventDetails){
+
+        eventDetails.preventDefault()
+        
+        let name=name_box.value;
+        let email=email_box.value;
+        let password=Password_box.value;
+        let confirmPassword=confirmPassword_box.value;
+     
+        //validations:
+
+        if(name==""||email==""||password==""||confirmPassword==""){
+            alert("Please fill all the details");
+            return;
+        }
+
+        if (password!=confirmPassword){
+            alert("Password and confirm password should be same");
+            return;
+        }
+
+        //try and catch
+
+        //Try statement allows you to define a block of code to be tested for errors while it is being exexuted.
+
+        // catch statement allows you to define a block of code to be executed ,if an error occurs in the try block.
+
+        try{
+            let response = await fetch("https://instagram-express-app.vercel.app/api/auth/signup",{
+
+            method:"POST",
+            headers:{
+                "content-type": "application/json"
+
+                //it indicates it sends json data to the api.
+            },
+
+            body:JSON.stringify({
+                name:name,
+                email:email,
+                password:password
+            })
+        })
+        console.log(response) // this response will be redable stream
+         let res = await response.json() // convets this response to json object
+         console.log(res) // 
+
+
+         // add the token to the local storage
+
+         if(res.data.token!=undefined){
+            localStorage.setItem("token",res.data.token);
+         }
+
+    //      res = {
+    // "success": true,
+    // "message": "User saved successfully",
+    // "data": {
+    //     "name": "Swati",
+    //     "email": "swati.6031@gmail.com",
+    //     "password": "$2b$10$dRbv7C3TsbEe/NB1HVdpy.AKDGQGt6f2SDls5c81ZBglo0HyBin7.",
+    //     "_id": "66026288fd78819ef91894ac",
+    //     "createdAt": "2024-03-26T05:52:08.558Z",
+    //     "updatedAt": "2024-03-26T05:52:08.566Z",
+    //     "__v": 0,
+    //     "token": "c1f7d338-9cd8-45a3-9ed1-9a7e05c68203"
+    // }
+// }
+        
+       // display the success or failure message in that paragraph: 
+       message.innerHTML = res.message
+
+       }
+        catch(err){
+            console.log(err);
+
+        }
+        
+    
+
+        //fetch 
+
+
+
+
+    }
+
+</script>
+
+
+</body>
+</html>
